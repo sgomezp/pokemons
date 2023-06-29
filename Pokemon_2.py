@@ -1,16 +1,28 @@
-"""Desarrollo del nuevo juego de Pokemo ;-)"""
+"""Desarrollo del nuevo juego de Pokemons ;-)"""
 
 from tabulate import tabulate
+import random
 
 # Clase principal (parent)
 class Pokemon:
     # Constructor
-    def __init__(self, name, life_points, attacks, weakness, strength):
+    def __init__(self, name, pk_type, life_points):
         self.name = name
+        self.pk_type = pk_type
         self.life_points = life_points
         self.attacks = {"Arañazo": 10}
-        self.strength = [strength]
 
+    def add_attack(self, name_attack, power_attack):
+        self.attacks[name_attack] = power_attack
+
+
+    def attack(self,target):
+        if self.attacks:
+            random_attack = random.choice(list(self.attacks.keys()))
+            print(f"{self.name} usa {random_attack} contra {target.name}")
+            power_attack = self.attacks[random_attack]
+        else:
+            print(f"{self.name} no conoce el ataque {random_attack} ")
 
     def defenderte(self):
         # Implementación de la defensa
@@ -25,43 +37,30 @@ class Pokemon:
 
 
 
+
 # Child classes
 class Agua(Pokemon):
-    def __init__(self, name, life_points, attacks, weakness, strength):
-        super().__init__(name, life_points, attacks, weakness, strength)
-        self.attacks = {"Pistola de agua": 15} | self.attacks
+    def __init__(self, name, life_points):
+        super().__init__(name, "Agua", life_points)
+        self.attacks = {"Pistola de agua": 15}
         self.weakeness = ["Planta"]
         self.strength = ["Fuego"]
 
 
-
 class Fuego(Pokemon):
-    def __init__(self, name, life_points, attacks, weakness, strength):
-        super().__init__(name, life_points, attacks, weakness, strength)
-        self.attacks = {"Lanzallamas": 20} | self.attacks
+    def __init__(self, name, life_points):
+        super().__init__(name, "Fuego", life_points)
+        self.attacks = {"Lanzallamas": 20}
         self.weakeness = ["Agua"]
         self.strength = ["Planta"]
 
 
-
 class Planta(Pokemon):
-    def __init__(self,name, life_points, attacks, weakness, strength ):
-        super().__init__(name, life_points, attacks, weakness, strength)
-        self.attacks = {"Látigo cepa": 30} | self.attacks
+    def __init__(self,name, life_points):
+        super().__init__(name, "Planta", life_points)
+        self.attacks = {"Látigo cepa": 30}
         self.weakeness = ["Fuego"]
         self.strength = ["Agua"]
-
-
-
-def atacar(atacante, attacks, atacado):
-    # Implementación del ataque)
-    if (type(atacante).__name__ == 'Agua'):
-        print(f" {atacante.name} es de agua")
-        print(attacks)
-
-    else:
-        print("no es de agua")
-    pass
 
 
 def crea_tabla():
@@ -80,34 +79,26 @@ def crea_tabla():
     print(tabla)
 
 
-def escoge_pokemon_atacante():
+# Crear instancias de la clase Pokemon Agua
+squirtle = Agua("Squirtle", 20)
+totodile = Agua("Totodile", 20)
 
-   atacante = input("escoge el pokemon atacante: ").lower()
+# Crear instancias de la clase Planta (Pokémon tipo planta)
+bulbasaur = Planta("Bulbasaur", 20)
+chikorita = Planta("Chikorita", 40)
 
-   match atacante:
-       case totodile.name:
-           print("atacante = Tododile")
-           return totodile
-       case squirtle.name:
-           print("atacante = Squirtle")
-           return squirtle
-
-
-# Crear una instancia de la clase Pokemon Agua
-squirtle = Agua("Squirtle", 20, {}, [], [])
-
-# creo otro de Agua
-totodile = Agua("Totodile", 20, {}, [], [])
-
-# Crear una instancia de la clase Planta (Pokémon tipo planta)
-bulbasaur = Planta("Bulbasaur", 20, {}, [], [])
-
-# creo otro de planta
-chikorita = Planta("Chikorita", 40, {}, [], [])
+# Crear instancias de la clase Fuego
+torchic = Fuego("Torchic", 35)
+cyndaquil = Fuego("Cyndaquil", 40)
 
 crea_tabla()
-atacante = (escoge_pokemon_atacante())
-print(atacante)
-atacar(atacante, atacante.attacks["Pistola de agua"], bulbasaur)
+
+squirtle.add_attack("Burbuja", 25)
+totodile.add_attack("Burbuja", 25)
 
 
+
+print(squirtle.name, squirtle.attacks, squirtle.life_points, squirtle.pk_type, squirtle.weakeness, squirtle.strength)
+print(totodile.name, totodile.attacks, totodile.life_points, totodile.pk_type, totodile.weakeness, totodile.strength)
+squirtle.attack(bulbasaur)
+bulbasaur.attack(chikorita)
