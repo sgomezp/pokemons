@@ -1,7 +1,11 @@
 """Desarrollo del nuevo juego de Pokemons ;-)"""
+from logger import setup_logger
 
 from tabulate import tabulate
 import random
+
+# Configurar el logger
+logger = setup_logger('log_pk.log')
 
 # Clase principal (parent)
 class Pokemon:
@@ -11,18 +15,6 @@ class Pokemon:
         self.pk_type = pk_type
         self.life_points = life_points
         self.attacks = {"Arañazo": 10}
-
-    def add_attack(self, name_attack, power_attack):
-        self.attacks[name_attack] = power_attack
-
-
-    def attack(self,target):
-        if self.attacks:
-            random_attack = random.choice(list(self.attacks.keys()))
-            print(f"{self.name} usa {random_attack} contra {target.name}")
-            power_attack = self.attacks[random_attack]
-        else:
-            print(f"{self.name} no conoce el ataque {random_attack} ")
 
     def defenderte(self):
         # Implementación de la defensa
@@ -34,6 +26,35 @@ class Pokemon:
 
     def get_strength(self):
         return self.strength
+
+    def add_attack(self, name_attack, power_attack):
+        self.attacks[name_attack] = power_attack
+
+    def cal_points(self, target, power_attack):
+        if self.get_weakness() == target.pk_type:
+            target.life_points = target.life_points - (power_attack * 0.5)
+        else:
+            target.life_points = target.life_points - (power_attack * 2)
+        return target.life_points
+
+
+    def attack(self, target):
+        if self.attacks:
+            random_attack = random.choice(list(self.attacks.keys()))
+            print(f"{self.name} usa {random_attack} contra {target.name}")
+            power_attack = self.attacks[random_attack]
+            result = self.cal_points(target, power_attack)
+            if result <= 0:
+                print(f"{self.name} le ganó a {target.name} quedando sus life points es: {result}")
+                #resetear LP de target
+            else:
+                print(f"{target.name} ha sobrevivido al ataque de {self.name} quedando sus Life Points en: {result}")
+        else:
+            logger.info("no conoce el ataque")
+            print(f"{self.name} no conoce el ataque {random_attack} ")
+
+
+
 
 
 
