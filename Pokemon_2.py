@@ -102,20 +102,27 @@ def arma_combate():
     Función que permite pedir al usuario los pokemons que van a combatir
     :return:
     """
+    flag = True
     # Solicitar al usuario los nombres de los Pokémon retador y objetivo
-    nombre_retador = input("Introduce el nombre del Pokémon retador: ").lower()
-    nombre_objetivo = input("Introduce el nombre del Pokémon objetivo: ").lower()
-    print()
+    while flag:
+        nombre_retador = input("Introduce el nombre del Pokémon retador: ").lower()
+        nombre_objetivo = input("Introduce el nombre del Pokémon objetivo: ").lower()
+        print()
+        # Verificar si los nombres ingresados corresponden a instancias válidas de las clases de Pokémon
+        if nombre_retador in globals() and nombre_objetivo in globals():
+            retador = globals()[nombre_retador]
+            objetivo = globals()[nombre_objetivo]
+            # Llamar al método attack() del Pokémon retador pasando el Pokémon objetivo como argumento
+            retador.attack(objetivo)
+            print()
+            seguir = input("Desea otro combate: s/n: ").lower()
+        else:
+            print("Los nombres de los Pokémon no son válidos.")
+        if seguir != "s":
+            flag = False
+        else:
+            flag = True
 
-    # Verificar si los nombres ingresados corresponden a instancias válidas de las clases de Pokémon
-    if nombre_retador in globals() and nombre_objetivo in globals():
-        retador = globals()[nombre_retador]
-        objetivo = globals()[nombre_objetivo]
-
-        # Llamar al método attack() del Pokémon retador pasando el Pokémon objetivo como argumento
-        retador.attack(objetivo)
-    else:
-        print("Los nombres de los Pokémon no son válidos.")
 
 def crea_tabla():
     """
