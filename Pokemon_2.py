@@ -16,7 +16,7 @@ class Pokemon:
         life_points_dic[self.name] = self.life_points
 
     def defenderte(self):
-        # Implementación de la defensa
+        # En un futuro, implementación de la defensa
         pass
 
     def get_weakness(self):
@@ -26,9 +26,22 @@ class Pokemon:
         return self.strength
 
     def add_attack(self, name_attack, power_attack):
+        """
+        Permite añadir para cada instancia de pokemon nuevos ataques.
+        De esta forma puedo agregar ataques únicos a pokemons específicos del mismo tipo
+        :param name_attack:
+        :param power_attack:
+        :return:
+        """
         self.attacks[name_attack] = power_attack
 
     def cal_points(self, target, power_attack):
+        """
+        Calcula el resultado del combate entre dos pokemons
+        :param target:
+        :param power_attack:
+        :return:
+        """
         if target.pk_type in self.get_weakness():
             lp_temp = target.life_points - (power_attack * 0.5)
         else:
@@ -39,7 +52,7 @@ class Pokemon:
         """
         Método que simula un ataque entre el pokemon que lo invoca y un adversario que se pasa como parámetro.
         El ataque se selecciona aleatoriamente entre los disponibles del pokemon invocante.
-        Si el pokemon target pierde se resetea el valor de sus life_points
+        Cuando el pokemon target pierde se resetea el valor de sus life_points
         :param target:
         :return:
         """
@@ -56,7 +69,7 @@ class Pokemon:
                     flag = False
                     target.life_points = life_points_dic[target.name]
                 else:
-                    print(f"{target.name} ha sobrevivido al ataque de {self.name} quedando sus Life Points en: {result}")
+                    print(f"{target.name} ha sobrevivido al ataque de {self.name} quedando sus Life Points en: {result} \n")
                     lp_temp = target.life_points
                     target.life_points = result
 
@@ -65,15 +78,14 @@ class Pokemon:
 class Agua(Pokemon):
     def __init__(self, name, life_points):
         super().__init__(name, "Agua", life_points)
-        super().add_attack("Pistola de agua", 15)
+        super().add_attack("Pistola de agua", 40)
         self.weakeness = ["Planta"]
         self.strength = ["Fuego"]
 
 class Fuego(Pokemon):
     def __init__(self, name, life_points):
         super().__init__(name, "Fuego", life_points)
-        super().add_attack("Lanzallamas", 20)
-        #self.attacks = {"Lanzallamas": 20}
+        super().add_attack("Lanzallamas", 90)
         self.weakeness = ["Agua"]
         self.strength = ["Planta"]
 
@@ -81,13 +93,36 @@ class Fuego(Pokemon):
 class Planta(Pokemon):
     def __init__(self,name, life_points):
         super().__init__(name, "Planta", life_points)
-        super().add_attack("Látigo cepa", 30)
-        #self.attacks = {"Látigo cepa": 30}
+        super().add_attack("Látigo cepa", 45)
         self.weakeness = ["Fuego"]
         self.strength = ["Agua"]
 
+def arma_combate():
+    """
+    Función que permite pedir al usuario los pokemons que van a combatir
+    :return:
+    """
+    # Solicitar al usuario los nombres de los Pokémon retador y objetivo
+    nombre_retador = input("Introduce el nombre del Pokémon retador: ").lower()
+    nombre_objetivo = input("Introduce el nombre del Pokémon objetivo: ").lower()
+    print()
+
+    # Verificar si los nombres ingresados corresponden a instancias válidas de las clases de Pokémon
+    if nombre_retador in globals() and nombre_objetivo in globals():
+        retador = globals()[nombre_retador]
+        objetivo = globals()[nombre_objetivo]
+
+        # Llamar al método attack() del Pokémon retador pasando el Pokémon objetivo como argumento
+        retador.attack(objetivo)
+    else:
+        print("Los nombres de los Pokémon no son válidos.")
 
 def crea_tabla():
+    """
+    Crea una tabla con los pokemons iniciales organizados por su tipo.
+    A futuro hay que rediseñar la lógica para incluir nuevos pokemons
+    :return:
+    """
     datos = [
         ["Squirtle", "Charmander", "Bulbasaur"],
         ["Totodile", "Cyndaquil", "Chikorita"],
@@ -103,28 +138,36 @@ def crea_tabla():
     print(tabla)
 
 # Crear instancias de la clase Pokemon Agua
-squirtle = Agua("Squirtle", 20)
-totodile = Agua("Totodile", 20)
+squirtle = Agua("Squirtle", 44)
+totodile = Agua("Totodile", 50)
+mudkip = Agua("Mudkip", 50)
 
 # Crear instancias de la clase Planta (Pokémon tipo planta)
-bulbasaur = Planta("Bulbasaur", 20)
-chikorita = Planta("Chikorita", 40)
+bulbasaur = Planta("Bulbasaur", 45)
+chikorita = Planta("Chikorita", 45)
+treecko = Planta("Treecko", 40)
 
 # Crear instancias de la clase Fuego
-torchic = Fuego("Torchic", 35)
-cyndaquil = Fuego("Cyndaquil", 40)
+torchic = Fuego("Torchic", 45)
+cyndaquil = Fuego("Cyndaquil", 39)
+charmander = Fuego("Chamander",39)
+
+# Añado ataque Burbuja a Squirtle y a Totodile
+squirtle.add_attack("Burbuja", 40)
+totodile.add_attack("Burbuja", 40)
+
+# Añado ataque Llama Azul a Cyndaquil y Lluvia ígena a Charmander
+cyndaquil.add_attack("Llama azul",130)
+charmander.add_attack("Lluvia ígnea", 100)
+
+# Añado ataque Bomba germen a Treecko y Hoja aguda a Chikorita
+treecko.add_attack("Bomba germen", 55)
+chikorita.add_attack("Hoja aguda", 70)
 
 crea_tabla()
 
-squirtle.add_attack("Burbuja", 25)
-totodile.add_attack("Burbuja", 25)
+arma_combate()
 
-for key, value in life_points_dic.items():
-    print(key, value)
-
-print(squirtle.name, squirtle.attacks, squirtle.life_points, squirtle.pk_type, squirtle.weakeness, squirtle.strength)
-print(totodile.name, totodile.attacks, totodile.life_points, totodile.pk_type, totodile.weakeness, totodile.strength)
-squirtle.attack(bulbasaur)
 
 
 
